@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import random
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -9,6 +10,14 @@ from . import config, llm
 from .index import Embedder, load_index
 from .prompts import QUIZ_SYSTEM, STYLES, TUTOR_SYSTEM
 from .retrieval import Hit, Retriever
+
+
+# Vietnamese-only letters; a question without any of them is treated as English.
+_VI_CHARS = re.compile(r"[ăâđêôơưàáạảãằắặẳẵầấậẩẫèéẹẻẽềếệểễìíịỉĩòóọỏõồốộổỗờớợởỡùúụủũừứựửữỳýỵỷỹ]", re.IGNORECASE)
+
+
+def reply_language(question: str) -> str:
+    return "Vietnamese" if _VI_CHARS.search(question) else "English"
 
 
 @dataclass
@@ -86,7 +95,8 @@ class Tutor:
         hits = self.retrieve(question, k)
         user = (
             f"Course excerpts:\n\n{format_context(hits)}\n\n"
-            f"Student question: {question}\n\n{STYLES.get(style, STYLES['step-by-step'])}"
+            f"Student question: {question}\n\n{STYLES.get(style, STYLES['step-by-step'])}\n"
+            f"Write the whole answer in {reply_language(question)}, even if the excerpts use another language."
         )
         text = llm.chat([{"role": "system", "content": TUTOR_SYSTEM}, {"role": "user", "content": user}])
         return Answer(text, hits)
