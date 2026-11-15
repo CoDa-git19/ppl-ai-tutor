@@ -1,0 +1,16 @@
+[project]
+name = "ppl-ai-tutor"
+version = "1.0.0"
+description = "Retrieval-augmented AI tutor for the Principles of Programming Languages course"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

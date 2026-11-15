@@ -1,0 +1,10 @@
+# Requirements for the Hugging Face Space (CPU). Gradio is preinstalled by the Space SDK.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+openai>=1.40
+sentence-transformers>=3.0
+rank-bm25>=0.2.2
+pylatexenc>=2.10
+pypdf>=4.0
+numpy>=1.24
+python-dotenv>=1.0
